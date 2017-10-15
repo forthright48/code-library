@@ -9,7 +9,7 @@ double cosineRule3Side ( double a, double b, double c ) {
 struct myVec {
     int d; //Dimension
     double val[MAXD];//Contains value of each component
-    
+
     myVec() {
         d = x; ///Change Here
     }
@@ -45,19 +45,19 @@ struct myVec {
     myVec unitVec () {
         return (*this).div ( length() ); // v / ||v||
     }
-    
+
     double angleBetween2D ( myVec b ) {
         double pol1 = atan2 ( val[1], val[0] );
         double pol2 = atan2 ( b.val[1], b.val[0] );
         if ( pol2 + eps < pol1 ) pol2 += 2 * pi;
-    
+
         double x = pol2 - pol1;
         if ( x > pi + eps ) x = (2*pi) - x;
-        
+
         //For direction, use sign of cross2D
-        return x;      
+        return x;
     }
-    
+
     //Causes precision error. Use angleBetween2D when 2D.
     double angleBetween ( myVec b ) { //Angle between two vectors
         double res = dot( b ) / ( length() * b.length() );
@@ -72,7 +72,7 @@ struct myVec {
     double cross2D ( myVec v ) { //Cross the two values. Only for 2D. Z compo 0.
         return val[0]*v.val[1] - val[1]*v.val[0];
     }
-    
+
     //Provided, a comes before b. Otherwise, need to swap
     bool between ( myVec a, myVec b ) {
         if ( val[0] + eps < a.val[0] || val[0] > b.val[0] + eps ) return false;
@@ -94,6 +94,34 @@ struct myLine {
     myLine lineFromPoints ( myVec x, myVec y ) {
         myLine m;m.a = x; m.b = y.sub ( x );
         return m;
+    }
+    //Line of the form Ax + By + C = 0
+    myLine lineFromABC ( double A, double B, double C ) {
+        if ( fabs (A) <= eps && fabs(B) <= eps ) {
+            assert(false);
+            myLine somethingIsWrong;
+            return somethingIsWrong;
+        }
+        else if ( fabs(B) < eps ) { //Vertical Line
+            double x = -C / A;
+            myVec p1;
+            p1.val[0] = x; p1.val[1] = 0;
+            myVec p2;
+            p2.val[0] = x; p2.val[1] = 1;
+
+            return lineFromPoints(p1, p2);
+        }else {
+            //When x = 0
+            double y = -C / B;
+            myVec p1;
+            p1.val[0] = 0; p1.val[1] = y;
+            //when x = 1
+            y = ( -C - A ) / B;
+            myVec p2;
+            p2.val[0] = 1; p2.val[1] = y;
+
+            return lineFromPoints(p1, p2);
+        }
     }
     //Finds point on line, given t.
     myVec atPos ( double t ) {
@@ -215,7 +243,7 @@ struct myCir {
         double x = am.polarAngle2D();
         double temp = d / r; if ( temp > 1 ) temp = 1; if ( temp < -1 ) temp = -1;
         double theta = pi / 2 - asin ( temp ); //Using sin law find internal angle.
-        
+
         t1 = x + theta;
         t2 = x - theta;
         return 'i';
@@ -292,7 +320,7 @@ struct myCir {
 
         return 4;
     }
-    
+
     //Used to find intersection area between circle and polygon
     double circleToLineArea ( myLine l ) {
         if ( l.a == l.atPos(1) ) return 0;
@@ -340,7 +368,7 @@ struct myCir {
         area += circleToLineArea ( l.lineFromPoints ( atPos(it), l.atPos(1) ) );
         return area;
     }
-    
+
 };
 
 bool collinear ( myVec a, myVec b, myVec c ) {
@@ -390,7 +418,7 @@ Next find the intersection of all edges of polygon with the ray. If intersection
 
 But ray shooting cannot handle points on boundary. So manually check if the give point is on boundary of an edge.
 
-if ( onboundary ) handle it 
+if ( onboundary ) handle it
 else if ( intersect is odd ) inside
 else outside
 */
