@@ -1,6 +1,6 @@
 //WARNING: Arrays are 1-based index.
 
-#define LENGTH XYZ
+const int LENGTH = XYZ;
 char text[LENGTH], pat[LENGTH];
 int pre[LENGTH];
 
@@ -15,9 +15,8 @@ void compute () {
 }
 int match () {
     int tlen = strlen ( text + 1 ), plen = strlen ( pat + 1 );
-    int q = 0;
-    int i, res = 0;
-    for ( i = 1; i <= tlen; i++ ) {
+    int q = 0, res = 0;
+    for ( int i = 1; i <= tlen; i++ ) {
         while ( q && pat[q+1] != text[i] ) q = pre[q];
 
         if ( pat[q+1] == text[i] ) q++;
